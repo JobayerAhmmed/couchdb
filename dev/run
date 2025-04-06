@@ -86,6 +86,7 @@ log.verbose = True
 def main():
     try:
         ctx = setup()
+        modify_configs(ctx)
         startup(ctx)
     except StartupError:
         sys.exit(1)
@@ -267,6 +268,12 @@ def get_args_parser():
         default=None,
         help="Use TCP for specified node when TLS distribution is enabled",
     )
+    parser.add_option(
+        "--test-config",
+        dest="test_config",
+        default=None,
+        help="Path to a config file to update the options in default.ini file",
+    )
     return parser
 
 
@@ -304,6 +311,7 @@ def setup_context(opts, args):
         "erlang_cookie": opts.erlang_cookie,
         "enable_tls": opts.enable_tls,
         "no_tls": opts.no_tls,
+        "test_config": opts.test_config,
     }
 
 
@@ -870,6 +878,40 @@ def hashify(pwd, salt=COMMON_SALT, iterations=10, keylen=32):
     """
     derived_key = pbkdf2_hex(pwd, salt, iterations, keylen, hashfunc=hashlib.sha256)
     return "-pbkdf2:sha256-%s,%s,%s" % (derived_key, salt, iterations)
+
+# 
+# @author Jobayer Ahmmed
+# 
+@log("Modify configs in local.ini")
+def modify_configs(ctx):
+    """Change config values in dev/lib/node*/etc/local.ini
+    for integration testing.
+    """
+    if ctx["test_config"] == None:
+        return
+    file_test_config = os.path.join(ctx["rootdir"], ctx["test_config"])
+    if not os.path.isfile(file_test_config):
+        return
+    
+    with open(file_test_config, "r") as json_file:
+        test_configs = json.load(json_file)
+    
+    for node in ctx["nodes"]:
+        file_local_ini = os.path.join(ctx["devdir"], "lib", node, "etc",
+                                      "local.ini")
+        config = ConfigParser()
+        config.read(file_local_ini)
+
+        for section, options in test_configs.items():
+            if not config.has_section(section):
+                config.add_section(section)
+            for option, value in options.items():
+                # value should be string, according to doc
+                # https://docs.python.org/3/library/configparser.html#configparser.ConfigParser.set
+                config.set(section, option, value)
+        
+        with open(file_local_ini, "w") as ini_file:
+            config.write(ini_file)
 
 
 def startup(ctx):

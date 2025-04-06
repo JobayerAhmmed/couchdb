@@ -18,6 +18,7 @@ defmodule CouchTestCase do
       &Couch.DBTest.set_config_context/1,
       &Couch.DBTest.set_user_context/1
     ]
+    # &Couch.DBTest.write_test_data/1
 
     context =
       Enum.reduce(setup_funs, context, fn setup_fun, acc ->

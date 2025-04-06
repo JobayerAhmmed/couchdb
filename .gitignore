@@ -134,3 +134,9 @@ test/javascript/junit.xml
 *.lock
 
 .tool-versions
+
+# @author Jobayer Ahmmed
+src/erlfmt_parse.erl
+src/first_xrl.erl
+src/first_yrl.erl
+src/r3_safe_erl_term.erl

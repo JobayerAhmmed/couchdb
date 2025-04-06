@@ -262,6 +262,7 @@ elixir: elixir-init devclean
 		--no-join \
 		--locald-config test/elixir/test/config/test-config.ini \
 		--erlang-config rel/files/eunit.config \
+		--test-config test/elixir/test/config/test-config.json \
 		--no-eval 'mix test --trace --include test/elixir/test/config/suite.elixir --exclude test/elixir/test/config/skip.elixir $(EXUNIT_OPTS)'
 
 ifneq ($(CLOUSEAU_DIR),)

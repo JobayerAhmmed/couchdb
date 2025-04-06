@@ -72,6 +72,49 @@ defmodule Couch.DBTest do
     end
   end
 
+  #
+  # @author Jobayer Ahmmed
+  #
+  def write_test_data(context) do
+    log_dir = "test/elixir/logs/log_configs"
+
+    case File.mkdir_p(log_dir) do
+      :ok ->
+        # Do nothing
+        :ok
+      {:error, reason} ->
+        IO.puts("Failed to create directory: #{log_dir}")
+    end
+
+    if context[:file] do
+      write_configs(context, log_dir)
+    end
+
+    write_pids(context, log_dir)
+
+    context
+  end
+
+  def write_configs(context, log_dir) do
+    # IO.inspect(Process.info(self(), :current_stacktrace))
+    config_url = "/_node/node1@127.0.0.1/_config"
+    resp = Couch.get(config_url)
+    assert resp.status_code == 200
+    config_json = Jason.encode!(resp.body, pretty: true)
+
+    file = Path.basename(context[:file])
+    line = context[:line]
+    filename = "#{log_dir}/#{file}_#{line}.txt"
+    File.write!(filename, config_json)
+  end
+
+  def write_pids(context, log_dir) do
+    cmd = "pgrep -af couchdb"
+    {output, 0} = System.cmd("sh", ["-c", cmd])
+    filename = "#{log_dir}/aa_pids.txt"
+    File.write!(filename, output, [:append])
+  end
+
   def random_db_name do
     random_db_name("random-test-db")
   end

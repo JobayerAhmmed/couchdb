@@ -1,2 +1,9 @@
 _build/
 deps/
+
+# 
+# @author Jobayer Ahmmed
+# 
+context.txt
+*.log
+logs
