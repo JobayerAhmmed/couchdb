@@ -1,29 +1,31 @@
 {
-    "chttpd": {
-      "max_http_request_size": "4294967296",
-      "disconnect_check_msec": "30000"
-    },
-    "chttpd_auth": {
-      "timeout": "600"
-    },
-    "chttpd_auth_lockout": {
-      "mode": "enforce",
-      "max_lifetime": "30000",
-      "threshold": "5"
-    },
-    "couchdb": {
-      "enable_database_recovery": "false",
-      "max_dbs_open": "500",
-      "max_document_size": "8000000"
-    },
-    "purge": {
-      "max_document_id_number": "100"
-    },
-    "replicator": {
-      "checkpoint_interval": "30000",
-      "connection_timeout": "30000",
-      "http_connections": "20",
-      "max_jobs": "500",
-      "worker_batch_size": "500"
-    }
+  "chttpd": {
+    "max_http_request_size": "4294967296",
+    "disconnect_check_msec": "30000"
+  },
+  "chttpd_auth": {
+    "timeout": "600"
+  },
+  "chttpd_auth_lockout": {
+    "mode": "enforce",
+    "max_lifetime": "30000",
+    "threshold": "5"
+  },
+  "couchdb": {
+    "enable_database_recovery": "false",
+    "max_dbs_open": "500",
+    "max_document_size": "8000000"
+  },
+  "purge": {
+    "max_document_id_number": "100"
+  },
+  "replicator": {
+    "checkpoint_interval": "30000",
+    "connection_timeout": "30000",
+    "http_connections": "20",
+    "worker_batch_size": "500",
+    "max_jobs": "500",
+    "interval": "60000",
+    "max_churn": "20"
   }
+}
